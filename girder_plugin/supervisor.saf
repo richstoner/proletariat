@@ -1,0 +1,66 @@
+; Main flask application
+
+[group:proletariat]
+programs=celery,flower,ipython,romanesco
+
+[program:celery]
+directory=##SAFAPPS##/proletariat
+user=##SAFUSER##
+command=/home/##SAFUSER##/miniconda/bin/celery worker -A tasks -l info --loglevel=INFO --concurrency=10 -n master.%%h
+stdout_logfile=/tmp/proletariat-celeryd-stdout.log
+stderr_logfile=/tmp/proletariat-celeryd-stderr.log
+autostart=false
+autorestart=false
+;startsecs=2
+;stopwaitsecs=30
+
+[program:flower]
+directory=##SAFAPPS##/proletariat
+user=##SAFUSER##
+command=/home/##SAFUSER##/miniconda/bin/flower --port=5555
+stdout_logfile=/tmp/proletariat-flower-stdout.log
+stderr_logfile=/tmp/proletariat-flower-stderr.log
+autostart=false
+autorestart=false
+; startsecs=4
+; stopwaitsecs=30
+
+
+[program:romanesco]
+directory=##SAFAPPS##/girder/plugins/romanesco
+user=##SAFUSER##
+command=/home/##SAFUSER##/miniconda/bin/python -m romanesco
+stdout_logfile=/tmp/proletariat-romanesco-stdout.log
+stderr_logfile=/tmp/proletariat-romanesco-stderr.log
+autostart=false
+autorestart=false
+; startsecs=4
+; stopwaitsecs=30
+
+[program:ipython]
+directory=##SAFAPPS##
+user=##SAFUSER##
+command=/home/##SAFUSER##/miniconda/bin/ipython2 notebook --profile=girderconfig
+stdout_logfile=/tmp/proletariat-ipython-stdout.log
+stderr_logfile=/tmp/proletariat-ipython-stderr.log
+autostart=false
+autorestart=false
+; startsecs=4
+; stopwaitsecs=30
+
+
+;[program:tangelo]
+;directory=##SAFAPPS##/proletariat
+;user=##SAFUSER##
+;environment = PYTHONPATH="$PYTHONPATH:##SAFAPPS##/girder"
+;command=/home/##SAFUSER##/miniconda/bin/tangelo -nd -nc --root ##SAFAPPS##/tangelo-hub/app --girder-path=##SAFAPPS## start --port 8008
+;stdout_logfile=/tmp/proletariat-tangelo-stdout.log
+;stderr_logfile=/tmp/proletariat-tangelo-stderr.log
+;autostart=true
+;autorestart=true
+; startsecs=4
+; stopwaitsecs=30
+
+
+
+
